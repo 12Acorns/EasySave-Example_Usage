@@ -1,0 +1,14 @@
+{
+    "name": "NEG.Plugins.EasySave",
+    "rootNamespace": "NEG.Plugins.EasySave",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
