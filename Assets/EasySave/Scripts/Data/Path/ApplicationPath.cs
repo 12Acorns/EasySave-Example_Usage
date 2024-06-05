@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.IO;
 
 namespace NEG.Plugins.EasySave.Data.Path
 {
@@ -20,10 +21,15 @@ namespace NEG.Plugins.EasySave.Data.Path
 		}
 
 		// DSaves => Default Saves-Denotes to the default directory to create saves in
-		public static ApplicationPath Instance { get; } = new(Application.persistentDataPath, "DSaves");
+		public static ApplicationPath Instance { get; } = 
+			new(Application.persistentDataPath, "DSaves");
 
 		private readonly PathData path;
 
+		public DirectoryInfo GetFullPath()
+		{
+			return path.FullPath;
+		}
         public ReadOnlySpan<char> GetSaveDirectoryName()
         {
             return path.SaveDirectory;

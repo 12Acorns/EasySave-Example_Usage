@@ -18,17 +18,17 @@ namespace NEG.Plugins.EasySave.Data.Path
             {
                 throw new InvalidDataException("Invalid path");
             }
-            if(!FileUtility.IsFileNameValid(_saveDirectoryName))
+			if(!FileUtility.IsFileNameValid(_saveDirectoryName))
             {
 				throw new InvalidDataException("Invalid file name");
 			}
 
-			Root = _directory;
+			Root = _directory ?? throw new InvalidDataException("Directory is null");
             SaveDirectory = _saveDirectoryName;
-            FullPath = Root.CreateSubdirectory(SaveDirectory);
+            FullPath = Root.CreateSubdirectory(_saveDirectoryName);
 		}
 
-        public DirectoryInfo FullPath;
+        public DirectoryInfo FullPath { get; }
         public DirectoryInfo Root { get; }
         public string SaveDirectory { get; }
     }

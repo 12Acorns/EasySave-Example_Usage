@@ -33,17 +33,16 @@ namespace NEG.Plugins.EasySave.Utility
 
 		public static bool IsFileNameValid(string _fileName)
 		{
-			return TryValidateFile(_fileName);
+			return TryValidateFileName(_fileName);
 		}
-		private static bool TryValidateFile(string _file)
+		private static bool TryValidateFileName(ReadOnlySpan<char> _file)
 		{
-			var _span = _file.AsSpan();
 			return StringExistAndValidLength(_file)
-				&& IsValidChars(_span)
-				&& IsValidName(_span);
+				&& IsValidChars(_file)
+				&& IsValidName(_file);
 		}
-		private static bool StringExistAndValidLength(string _file) =>
-			!(string.IsNullOrEmpty(_file) && string.IsNullOrWhiteSpace(_file)) && _file.Length > 0;
+		private static bool StringExistAndValidLength(ReadOnlySpan<char> _file) =>
+			!_file.IsEmpty && _file.Length > 0 && !_file.IsWhiteSpace();
 		private static bool IsValidName(ReadOnlySpan<char> _path)
 		{
 			if(_path.Length < compareLength)

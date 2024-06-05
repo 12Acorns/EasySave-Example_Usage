@@ -12,10 +12,15 @@ public readonly struct TransformData : ISaveable
 	{
 		position = _position;
 		scale = _scale;
-		rotation = _rotation;
+		rotation = _rotation.eulerAngles;
 	}
 
 	public readonly Vector3 position;
 	public readonly Vector3 scale;
-	public readonly Quaternion rotation;
+	public readonly Vector4 rotation;
+
+	public Vector4 GetVectorFromQuat(Quaternion _quat)
+	{
+		return new Vector4(_quat.x, _quat.y, _quat.z, _quat.w);
+	}
 }

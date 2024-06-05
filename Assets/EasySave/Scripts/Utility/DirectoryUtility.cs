@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System;
+using JetBrains.Annotations;
 
 namespace NEG.Plugins.EasySave.Utility
 {
@@ -9,6 +10,8 @@ namespace NEG.Plugins.EasySave.Utility
         private const int compareLength = 3;
         private const string pathStartA = ":\\";
         private const string pathStartB = ":/";
+
+        private static readonly Dictionary<string, DirectoryInfo> cachedDirectories = new();
 
         private static readonly HashSet<string> invalidNameSet = new()
         {
@@ -31,7 +34,7 @@ namespace NEG.Plugins.EasySave.Utility
             '\0'
         };
 
-        public static bool TryCreateDirectory(string _path, out DirectoryInfo _directory)
+        public static bool TryCreateDirectory(ReadOnlySpan<char> _path, out DirectoryInfo _directory)
         {
             _directory = null!;
 
@@ -40,13 +43,20 @@ namespace NEG.Plugins.EasySave.Utility
                 return false;
             }
 
+            var _pathString = _path.ToString();
 			try
 			{
-				if(Directory.Exists(_path))
+				if(!Directory.Exists(_pathString))
 				{
+					_directory = Directory.CreateDirectory(_pathString);
+                    cachedDirectories.Add(_pathString, _directory);
 					return true;
 				}
-				_directory = Directory.CreateDirectory(_path);
+				if(!cachedDirectories.TryGetValue(_pathString, out _directory))
+				{
+					_directory = new DirectoryInfo(_pathString);
+					cachedDirectories.Add(_pathString, _directory);
+				}
 				return true;
 			}
 			catch(Exception)
@@ -54,16 +64,15 @@ namespace NEG.Plugins.EasySave.Utility
                 return false;
             }
         }
-        private static bool TryValidateString(string _path)
+        private static bool TryValidateString(ReadOnlySpan<char> _path)
         {
-            var _span = _path.AsSpan();
             return StringExistAndValidLength(_path)
-                && IsPathStartValid(_span)
-                && CheckForInvalidChars(_span)
-                && CheckForInvalidNames(_span);
+                && IsPathStartValid(_path)
+                && CheckForInvalidChars(_path)
+                && CheckForInvalidNames(_path);
 		}
-        private static bool StringExistAndValidLength(string _path) =>
-            !(string.IsNullOrEmpty(_path) && string.IsNullOrWhiteSpace(_path)) && _path.Length > 3;
+        private static bool StringExistAndValidLength(ReadOnlySpan<char> _path) =>
+            !_path.IsEmpty && !_path.IsWhiteSpace() && _path.Length is > 3;
         private static bool IsPathStartValid(ReadOnlySpan<char> _path)
         {
             var _slice = _path.Slice(1, 2);

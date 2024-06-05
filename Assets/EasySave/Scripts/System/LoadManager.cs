@@ -7,21 +7,19 @@ namespace NEG.Plugins.EasySave.System
 {
     public sealed class LoadManager
     {
-		public LoadManager(ApplicationPath _applicationPath, Formatting _formatOption = Formatting.None)
+		public LoadManager(ApplicationPath _applicationPath)
 		{
 			ApplicationPath = _applicationPath;
-			formatOption = _formatOption;
 		}
 
 		public static LoadManager Instance { get; } = new(ApplicationPath.Instance);
 
 		public ApplicationPath ApplicationPath { get; }
-		private readonly Formatting formatOption;
 
-		public ReadOnlySpan<char> SerializeFile<File>(File _file)
+		public File DeSerializeFile<File>(string _file)
 			where File : ISaveable
 		{
-			return JsonConvert.SerializeObject(_file, formatOption);
+			return JsonConvert.DeserializeObject<File>(_file);
 		}
 	}
 }
