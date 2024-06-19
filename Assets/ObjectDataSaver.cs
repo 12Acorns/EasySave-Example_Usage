@@ -1,13 +1,16 @@
-using NEG.Plugins.EasySave.System;
+using NEG.Plugins.EasySave.SaveSystem;
+using System.IO;
 using UnityEngine;
 
-public class ObjectDataSaver : MonoBehaviour
+public sealed class ObjectDataSaver : MonoBehaviour
 {
+	private const string DIRECTORYNAME = "Scene Objects";
+	private const string FILENAME = "Object Data";
+
 	[ContextMenu("Save Items")]
 	public void Save()
 	{
 		var _children = GetComponentsInChildren<Transform>();
-
 
 		foreach(var _child in _children)
 		{
@@ -20,11 +23,12 @@ public class ObjectDataSaver : MonoBehaviour
 
 			var _colour = _object.GetComponent<Renderer>().material.color;
 
-			var _transformData = new TransformData(_child);
-			var _colourData = new ObjectData(_colour);
+			var _objectData = new ObjectData(_colour, _child);
 
-			SaveManager.Instance.TrySaveFile(_transformData, _object.name, "Transform Data");
-			SaveManager.Instance.TrySaveFile(_colourData, _object.name, "Colour Data");
+			// ..\\Scene Objects\\Cube (1) -> (x)
+			var _subDirectory = Path.Combine(DIRECTORYNAME, _object.name);
+
+			SaveManager.Instance.TrySaveFile(_objectData, _subDirectory, FILENAME);
 		}
 	}
 }

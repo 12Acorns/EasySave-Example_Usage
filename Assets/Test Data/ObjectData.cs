@@ -1,20 +1,17 @@
 using NEG.Plugins.EasySave.Data;
-using UnityEngine;
+using NEG.Plugins.EasySave.SerializableTypes.Colour;
 using System;
+using UnityEngine;
 
 [Serializable]
-public readonly struct ObjectData : ISaveable
+public struct ObjectData : ISaveable
 {
-	public ObjectData(Color _colour)
+	public ObjectData(Color _colour, TransformData _transform)
 	{
-		Red = _colour.r;
-		Green = _colour.g;
-		Blue = _colour.b;
-		Alpha = _colour.a;
+		Colour = _colour;
+		Transform = _transform;
 	}
 
-	public readonly float Red;
-	public readonly float Green;
-	public readonly float Blue;
-	public readonly float Alpha;
+	public TransformData Transform { get; set; }
+	public SColour Colour { get; set; }
 }
