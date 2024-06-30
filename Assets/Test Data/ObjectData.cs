@@ -1,5 +1,5 @@
 using NEG.Plugins.EasySave.Data;
-using NEG.Plugins.EasySave.SerializableTypes.Colour;
+using NEG.Plugins.EasySave.SerializableTypes.Material;
 using System;
 using UnityEngine;
 
@@ -11,7 +11,6 @@ public struct ObjectData : ISaveable
 		Colour = _colour;
 		Transform = _transform;
 	}
-
 	public TransformData Transform { get; set; }
 	public SColour Colour { get; set; }
 }

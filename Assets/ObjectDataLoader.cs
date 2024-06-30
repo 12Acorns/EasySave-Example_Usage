@@ -9,7 +9,9 @@ public sealed class ObjectDataLoader : MonoBehaviour
 	{
 		saveDirectoryPath =
 			Path.Combine(
-				SaveManager.Instance.ApplicationPath.GetFullPath().FullName, DIRECTORYNAME);
+				SaveManager.UnityInstance.ApplicationPath.GetFullPath().FullName, DIRECTORYNAME);
+
+		Debug.Log($"Load Path: {saveDirectoryPath}");
 	}
 
 	private string saveDirectoryPath;
@@ -19,6 +21,17 @@ public sealed class ObjectDataLoader : MonoBehaviour
 	[ContextMenu("Load Items")]
 	public void Load()
 	{
+		var _children = gameObject.GetComponentsInChildren<Transform>();
+
+		foreach(var _child in _children)
+		{
+			if(transform == _child)
+			{
+				continue;
+			}
+			Destroy(_child.gameObject);
+		}
+
 		if(!DirectoryUtility.TryGetSubDirectories(saveDirectoryPath, out var _subDirectories))
 		{
 			Debug.Log("Did not find directory");
@@ -39,7 +52,7 @@ public sealed class ObjectDataLoader : MonoBehaviour
 
 				var _localPathToFile = Path.Combine(DIRECTORYNAME, _parentDirectoryOfFile);
 
-				var _data = LoadManager.Instance.LoadFile<ObjectData>
+				var _data = LoadManager.UnityInstance.LoadFile<ObjectData>
 					(_localPathToFile, _fileName);
 
 				InitObject(_data.AsT0);
@@ -57,13 +70,13 @@ public sealed class ObjectDataLoader : MonoBehaviour
 	{
 		_object.transform.parent = transform;
 
-		_object.transform.position = _data.Transform.Position.GetVector();
-		_object.transform.localScale = _data.Transform.Scale.GetVector();
-		_object.transform.rotation = _data.Transform.Rotation.GetQuaternion();
+		_object.transform.position = _data.Transform.Position.Vector;
+		_object.transform.localScale = _data.Transform.Scale.Vector;
+		_object.transform.rotation = _data.Transform.Rotation.Quaternion;
 	}
 	private static void InitColour(GameObject _object, ObjectData _data)
 	{
-		_object.GetComponent<Renderer>().material.color = _data.Colour.GetColour();
+		_object.GetComponent<Renderer>().material.color = _data.Colour.Colour;
 
 	}
 }

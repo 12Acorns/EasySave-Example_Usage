@@ -7,6 +7,14 @@ public sealed class ObjectDataSaver : MonoBehaviour
 	private const string DIRECTORYNAME = "Scene Objects";
 	private const string FILENAME = "Object Data";
 
+	private void Awake()
+	{
+		var _savePath = Path.Combine(
+			SaveManager.UnityInstance.ApplicationPath.GetFullPath().FullName, DIRECTORYNAME);
+
+		Debug.Log($"Save Path: {_savePath}");
+	}
+
 	[ContextMenu("Save Items")]
 	public void Save()
 	{
@@ -28,7 +36,7 @@ public sealed class ObjectDataSaver : MonoBehaviour
 			// ..\\Scene Objects\\Cube (1) -> (x)
 			var _subDirectory = Path.Combine(DIRECTORYNAME, _object.name);
 
-			SaveManager.Instance.TrySaveFile(_objectData, _subDirectory, FILENAME);
+			SaveManager.UnityInstance.TrySaveFile(_objectData, _subDirectory, FILENAME);
 		}
 	}
 }
